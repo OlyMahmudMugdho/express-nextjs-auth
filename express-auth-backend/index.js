@@ -10,6 +10,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 import cors from 'cors'
+import fs from 'fs'
 
 //import generate from './utils/jwt.generator.js'
 
@@ -24,7 +25,7 @@ app.use(cookieParser());
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 
-app.use(morgan('tiny'))
+// app.use(morgan('tiny'))
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 const PORT = process.env.PORT || 8081
@@ -35,9 +36,23 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.static(__dirname + "/out"))
 
-app.get('/*', function (req, res) {
-    res.sendFile(path.resolve('./out/index.html'));
-});
+app.get('*', (req, res) => {
+    const pathPrefix = req.path
+    
+    let filePath = path.join(__dirname, 'out', req.path, 'index.html');
+
+    if(pathPrefix !== "") {
+        filePath = path.join(__dirname, 'out', `${req.path}.html`);
+    }
+
+  
+    // Check if the requested file 
+    if (fs.existsSync(filePath)) {
+      res.sendFile(filePath);
+    } else {
+      res.sendFile(path.join(__dirname, 'out', 'index.html'));
+    }
+  });
 
 app.use('/api/signup', signupRoute)
 app.use('/api/login', loginRoute)

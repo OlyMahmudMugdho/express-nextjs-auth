@@ -5,3 +5,4 @@ express-auth-backend/index.html
 .next
 express-auth-next/out
 express-auth-next/.idea
+out
