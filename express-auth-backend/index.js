@@ -37,7 +37,7 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(__dirname + "/out"))
 
 app.get('*', (req, res) => {
-    const pathPrefix = req.path
+    const pathPrefix = req.path;
     
     let filePath = path.join(__dirname, 'out', req.path, 'index.html');
 
